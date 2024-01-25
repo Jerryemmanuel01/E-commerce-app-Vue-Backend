@@ -1,6 +1,15 @@
+require("dotenv").config();
+
+const mongoose = require("mongoose");
 const express = require("express");
+const connectDB = require("./dbConn");
+
 let { cartItems } = require("./temp-data");
 let { products } = require("./temp-data");
+
+//connect to mongoDB
+
+connectDB();
 
 const app = express();
 app.use(express.json());
@@ -14,7 +23,7 @@ function populatedCartIds(ids) {
 }
 
 app.get("/cart", (req, res) => {
-  const populatedCart = populatedCartIds(cartItems)
+  const populatedCart = populatedCartIds(cartItems);
   res.json(populatedCart);
 });
 
@@ -27,7 +36,7 @@ app.get("/products/:productId", (req, res) => {
 app.post("/cart", (req, res) => {
   const productId = req.body.id;
   cartItems.push(productId);
-  const populatedCart = populatedCartIds(cartItems)
+  const populatedCart = populatedCartIds(cartItems);
   res.json(populatedCart);
 });
 
@@ -38,6 +47,11 @@ app.delete("/cart/:productId", (req, res) => {
   res.json(populatedCart);
 });
 
-app.listen(8000, () => {
+mongoose.connection.once("open", () => {
+  console.log("connected to MongoDB");
+  app.listen(8000, () => {
   console.log("Server is listening on port 8000");
 });
+});
+
+
