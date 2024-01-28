@@ -1,5 +1,5 @@
 require("dotenv").config();
-const path = require('path')
+const path = require("path");
 
 const { MongoClient } = require("mongodb");
 const express = require("express");
@@ -13,7 +13,7 @@ async function serve() {
   const app = express();
   app.use(express.json());
 
-  app.use('/images', express.static(path.join(__dirname, '../assets')))
+  app.use("/images", express.static(path.join(__dirname, "../assets")));
 
   app.get("/api/products", async (req, res) => {
     const products = await db.collection("product").find({}).toArray();
